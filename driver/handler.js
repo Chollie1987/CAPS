@@ -3,7 +3,7 @@
 const events = require("../eventPool");
 
 // events.on('pickup', pickup);
-events.on('pickedUp', pickedUp);
+events.on('pickup', pickedUp);
 // events.on('inTransit', inTransit);
 // events.on('delivered', delivered);
 
@@ -13,7 +13,7 @@ events.on('pickedUp', pickedUp);
 // }
 
 function pickedUp(data) {
-  console.log('DRIVER: order has been picked up', data);
+  console.log({event: 'pickedUp'}, 'DRIVER: order has been picked up', data);
   events.emit('inTransit', data);
   events.emit('delivered', data);
 }

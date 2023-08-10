@@ -6,35 +6,41 @@ events.on('pickup', pickedUp);
 events.on('inTransit', inTransit);
 events.on('delivered', delivered);
 
-function pickedUp(OrderId) {
-  console.log('VENDOR: Verified your order has been picked up', OrderId);
+function pickedUp(orderId) {
+  console.log({event: 'pickedUp'},'VENDOR: Verified your order has been picked up', orderId);
 }
 
-function pickup(data) {
-   console.log('Got it');
-   pickedUp(data.payload.orderId);
- }
+// function pickup(data) {
+//    console.log('Got it');
+//    pickedUp(data.payload.orderId);
+//  }
 
 function inTransit(orderId) {
     console.log({event: 'order en route'}, orderId);
 }
 
-function delivered(orderId) {
-    console.log('delivered', orderId);
+function thankCustomer(payload){
+  console.log({event: 'thankCustomer'}, 'Vendor: Thank you for your order', payload.payload.customer);
+}
+  function delivered(payload) {
+  console.log({event: 'delivered'},'Driver: Order was delivered', payload.payload.orderId);
+  setTimeout(() => {
+    thankCustomer(payload);
+  }, 1000)
 }
 
 setInterval(() => {
   console.log('-------------');
-  let EVENT = {
+  let event = {
     event: 'pickup',
     time: new Date().getTime(),
     payload: {
       store: 'movie-to-go',
-      orderId: Math.ceil(Math.random() * 50),
+      orderId: '31',
       customer: 'Christina Hollie',
       address: 'Portland, OR',
     },
   };
-  console.log(Event);
-  events.emit('pickup', EVENT);
+  console.log(event);
+  events.emit('pickup', event);
 }, 5000);
