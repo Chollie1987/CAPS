@@ -6,7 +6,6 @@ const events = require("../eventPool");
 events.on('pickup', pickedUp);
 // events.on('inTransit', inTransit);
 // events.on('delivered', delivered);
-
 // function pickup(data) {
 //   console.log('Got it');
 //   pickedUp(data.payload.orderId);
