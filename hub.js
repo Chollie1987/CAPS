@@ -10,24 +10,32 @@ io.listen(3000);
 
 function handleConnection(socket) {
     console.log('we are connected:', socket.id);
-    socket.on(events.pickup, (payload) => console.log('pickup requested', payload.orderId));
+    socket.on(events.pickup, handlePickUp);
     socket.emit('got it', {message: 'pickup received'});
-    io.emit('announcment', {message: 'pickup ready'});
+    // io.emit(events.pickup, {message: 'pickup ready', ...payload});
     socket.on(events.pickedUp, (orderId) => handlePickedUp(orderId, socket));
     socket.on(events.inTransit, (orderId) => handleInTransit(orderId, socket));
     socket.on(events.delivered, (orderId) => handleDelivered(orderId, socket));
 }
 
+function handlePickUp (payload) {
+    console.log('package ready for pickup');
+    io.emit(events.pickup, { message: 'pickup ready', ...payload });
+}
+
 function handlePickedUp (orderId, socket) {
-    io.emit(events.pickedUp, orderId);
+    console.log('driver picked up order', orderId);
+     io.emit(events.pickedUp, orderId);
 }
 
-function handleInTransit (orderId, socket) {
-    io.emit(events.inTransit, orderId);
+function handleInTransit (payload, socket) {
+    console.log('package en route', payload);
+    io.emit(events.inTransit, payload);
 }
 
-function handleDelivered (orderId, socket) {
-    io.emit(events.delivered, orderId);
+function handleDelivered (payload, socket) {
+    console.log('order was delivered', payload);
+    io.emit(events.delivered, payload);
 }
 function startSocketServer() {
     console.log('The server is started');
@@ -35,8 +43,8 @@ function startSocketServer() {
     io.on('connection', handleConnection)
 }
 
-require("./vendor/handler.js");
-require("./driver/handler.js");
+// require("./vendor/handler.js");
+// require("./driver/handler.js");
 
 
 // socket.on('pickup', (payload) => logger('pickup', payload));
